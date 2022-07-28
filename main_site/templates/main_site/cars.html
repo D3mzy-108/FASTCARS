@@ -39,12 +39,12 @@
                             <h5 class="card-title">{{vehicle.brand.brand_name}} {{vehicle.vehicle_model}}</h5>
                             <div class="d-flex justify-content-start">
                                 <div class="pe-2 text-center text-white">
-                                    <img src="{% static 'media/car_wheel.png' %}" width="20px" height="20px"
+                                    <img src="{% static 'images/car_wheel.png' %}" width="20px" height="20px"
                                         style="filter: invert(100%);" alt="" class="img-fluid">
                                     <p class="mt-1">{{vehicle.drive}}</p>
                                 </div>
                                 <div class="pe-2 text-center text-white">
-                                    <img src="{% static 'media/transmission.png' %}" width="20px" height="20px"
+                                    <img src="{% static 'images/transmission.png' %}" width="20px" height="20px"
                                         style="filter: invert(100%);" alt="" class="img-fluid">
                                     <p class="mt-1">
                                         {% if vehicle.transmission == "manual" %}
@@ -55,7 +55,7 @@
                                     </p>
                                 </div>
                                 <div class="pe-2 text-center text-white">
-                                    <img src="{% static 'media/engine.jpg' %}" width="20px" height="20px"
+                                    <img src="{% static 'images/engine.jpg' %}" width="20px" height="20px"
                                         style="filter: invert(100%);" alt="" class="img-fluid">
                                     <p class="mt-1">{{vehicle.horsepower}}</p>
                                 </div>
@@ -148,7 +148,7 @@
         background-position: center;
         background-blend-mode: darken;
         background-color: rgba(0, 0, 0, .5);
-        background-image: url('{% static "media/form_side_image.jpg" %}');
+        background-image: url('{% static "images/form_side_image.jpg" %}');
         clip-path: polygon(0% 0%, 100% 0, 100% 90%, 50% 100%, 0% 90%);
     }
 

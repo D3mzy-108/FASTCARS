@@ -29,7 +29,7 @@
                             <img src="{{booking.user.profile_image.url}}" alt="" width="35px" height="35px" class="me-3"
                                 style="border-radius: 50%;">
                             {% else %}
-                            <img src="{% static 'media/user_icon.png' %}" alt="" width="35px" height="35px" class="me-3"
+                            <img src="{% static 'images/user_icon.png' %}" alt="" width="35px" height="35px" class="me-3"
                                 style="border-radius: 50%;">
                             {% endif %}
 
@@ -105,7 +105,7 @@
                                 <img src="{{booking.user.profile_image.url}}" alt="" width="60px" height="60px"
                                     class="me-3 my-3" style="border-radius: 50%;">
                                 {% else %}
-                                <img src="{% static 'media/user_icon.png' %}" alt="" width="60px" height="60px"
+                                <img src="{% static 'images/user_icon.png' %}" alt="" width="60px" height="60px"
                                     class="me-3 my-3" style="border-radius: 50%;">
                                 {% endif %}
                                 <h6>{{booking.user.username}}</h6>
@@ -132,12 +132,12 @@
                                         {{booking.vehicle.vehicle_model}}</h5>
                                     <div class="d-flex justify-content-start">
                                         <div class="pe-2 text-center text-white">
-                                            <img src="{% static 'media/car_wheel.png' %}" width="20px" height="20px"
+                                            <img src="{% static 'images/car_wheel.png' %}" width="20px" height="20px"
                                                 style="filter: invert(100%);" alt="" class="img-fluid">
                                             <p class="mt-1">{{booking.vehicle.drive}}</p>
                                         </div>
                                         <div class="pe-2 text-center text-white">
-                                            <img src="{% static 'media/transmission.png' %}" width="20px" height="20px"
+                                            <img src="{% static 'images/transmission.png' %}" width="20px" height="20px"
                                                 style="filter: invert(100%);" alt="" class="img-fluid">
                                             <p class="mt-1">
                                                 {% if booking.vehicle.transmission == "manual" %}
@@ -148,7 +148,7 @@
                                             </p>
                                         </div>
                                         <div class="pe-2 text-center text-white">
-                                            <img src="{% static 'media/engine.jpg' %}" width="20px" height="20px"
+                                            <img src="{% static 'images/engine.jpg' %}" width="20px" height="20px"
                                                 style="filter: invert(100%);" alt="" class="img-fluid">
                                             <p class="mt-1">{{booking.vehicle.horsepower}}</p>
                                         </div>
