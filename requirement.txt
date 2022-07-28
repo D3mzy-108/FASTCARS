@@ -1,6 +1,8 @@
 asgiref==3.5.2
 autopep8==1.6.0
 Django==3.2a1
+django-crispy-forms==1.14.0
+Pillow==9.2.0
 pycodestyle==2.8.0
 pytz==2022.1
 sqlparse==0.4.2
