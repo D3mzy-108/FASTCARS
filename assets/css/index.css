@@ -13,6 +13,11 @@ body {
     background: #f5f5f5 !important;
 }
 
+main{
+    width: 100% !important;
+    overflow-x: hidden;
+}
+
 .main_content {
     width: 80%;
     max-height: 100vh;
