@@ -1,0 +1,222 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block main %}
+
+<div class="col-12 d-flex flex-wrap">
+    <div class="col-12 col-lg">
+        {% include "partials/sidenav.html" %}
+    </div>
+    <div class="main_content">
+        <div class="col-12 p-2">
+            <h4>Dashboard</h4>
+        </div>
+
+        <div class="d-flex flex-wrap p-1">
+            <!-- REGISTERED USERS -->
+            <div class="col-6 col-md-4 col-lg-3 p-1">
+                <div class="bg-white p-3 d-flex align-items-center shadow">
+                    <div class="px-0 px-md-2 me-3">
+                        <h3 class="fas fa-user-circle" style="color: #D5CCF9; font-size: 35px;"></h3>
+                    </div>
+                    <div class="col pe-0 pe-md-3">
+                        <h4 style="line-height: 1em;">{{users.count}}</h4>
+                        <small style="line-height: 0.5em;" class="text-muted">Registered users</small>
+                    </div>
+                </div>
+            </div>
+            <!-- TOTAL VEHICLES -->
+            <div class="col-6 col-md-4 col-lg-3 p-1">
+                <div class="bg-white p-3 d-flex align-items-center shadow">
+                    <div class="px-0 px-md-2 me-3">
+                        <h3 class="fas fa-car" style="color: #83D7DD; font-size: 35px;"></h3>
+                    </div>
+                    <div class="col pe-0 pe-md-3">
+                        <h4 style="line-height: 1em;">{{total_no_of_vehicles}}</h4>
+                        <small style="line-height: 0.5em;" class="text-muted">Total vehicles</small>
+                    </div>
+                </div>
+            </div>
+            <!-- TOTAL BOOKINGS TODAY -->
+            <div class="col-6 col-md-4 col-lg-3 p-1">
+                <div class="bg-white p-3 d-flex align-items-center shadow">
+                    <div class="px-0 px-md-2 me-3">
+                        <h3 class="fas fa-book-open" style="color: #373B54; font-size: 35px;"></h3>
+                    </div>
+                    <div class="col pe-0 pe-md-3">
+                        <h4 style="line-height: 1em;">{{booking_count}}</h4>
+                        <small style="line-height: 0.5em;" class="text-muted">Bookings today</small>
+                    </div>
+                </div>
+            </div>
+            <!-- AVAILABLE VEHICLES -->
+            <div class="col-6 col-md-4 col-lg-3 p-1">
+                <div class="bg-white p-3 d-flex align-items-center shadow">
+                    <div class="px-0 px-md-2 me-3">
+                        <h3 class="fas fa-car-on" style="color: #839bdd; font-size: 35px;"></h3>
+                    </div>
+                    <div class="col pe-0 pe-md-3">
+                        <h4 style="line-height: 1em;">{{available_vehicles}}</h4>
+                        <small style="line-height: 0.5em;" class="text-muted">Available vehicles</small>
+                    </div>
+                </div>
+            </div>
+            <!-- CUSTOMER QUERIES -->
+            <div class="col-6 col-md-4 col-lg-3 p-1">
+                <div class="bg-white p-3 d-flex align-items-center shadow">
+                    <div class="px-0 px-md-2 me-3">
+                        <h3 class="far fa-circle-question" style="color: #FFA14C; font-size: 35px;"></h3>
+                    </div>
+                    <div class="col pe-0 pe-md-3">
+                        <h4 style="line-height: 1em;">{{queries.count}}</h4>
+                        <small style="line-height: 0.5em;" class="text-muted">Customer queries</small>
+                    </div>
+                </div>
+            </div>
+            <!-- REVENUE -->
+            <div class="col-6 col-md-4 col-lg-3 p-1">
+                <div class="bg-white p-3 d-flex align-items-center shadow">
+                    <div class="px-0 px-md-2 me-3">
+                        <h3 class="fas fa-dollar-sign" style="color: #ff4c4c; font-size: 35px;"></h3>
+                    </div>
+                    <div class="col pe-0 pe-md-3">
+                        <h4 style="line-height: 1em;">{{revenue}}</h4>
+                        <small style="line-height: 0.5em;" class="text-muted">Revenue (today)</small>
+                    </div>
+                </div>
+            </div>
+            <!-- NEW USERS -->
+            <div class="col-6 col-md-4 col-lg-3 p-1">
+                <div class="bg-white p-3 d-flex align-items-center shadow">
+                    <div class="px-0 px-md-2 me-3">
+                        <h3 class="far fa-user" style="color: #bdfac5; font-size: 35px;"></h3>
+                    </div>
+                    <div class="col pe-0 pe-md-3">
+                        <h4 style="line-height: 1em;">{{new_users}}</h4>
+                        <small style="line-height: 0.5em;" class="text-muted">New users</small>
+                    </div>
+                </div>
+            </div>
+            <!-- PENDING QUERIES -->
+            <div class="col-6 col-md-4 col-lg-3 p-1">
+                <div class="bg-white p-3 d-flex align-items-center shadow">
+                    <div class="px-0 px-md-2 me-3">
+                        <h3 class="fas fa-circle-exclamation" style="color: #4cfff0; font-size: 35px;"></h3>
+                    </div>
+                    <div class="col pe-0 pe-md-3">
+                        <h4 style="line-height: 1em;">{{pending.count}}</h4>
+                        <small style="line-height: 0.5em;" class="text-muted">Pending queries</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        
+
+
+        <div class="col-12 p-2 mt-4">
+            <h4>Today's Trips</h4>
+        </div>
+
+        <div class="col-12 p-1">
+
+            <!-- BOOKINGS -->
+
+            <span class="col-12 py-5 my-5 text-dark d-none no_bookings text-center">There are no bookings for
+                today</span>
+
+            <div class="col-12 d-flex flex-wrap">
+                {% for booking in bookings %}
+                <div class="col-12 col-md-6 col-lg-4 p-2 d-none bookings">
+                    <div class="p-3 bg-white card border-0 shodow-sm">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <h5 style="font-size: 19px;"><a href="{% url 'booking_details' booking.id %}"
+                                    class="text-decoration-none">#{{booking.id}}</a></h5>
+                            <a class="text-danger" href="{% url 'delete_booking' booking.id %}"><i
+                                    class="fas fa-trash"></i></a>
+                        </div>
+                        <div class="d-flex align-items-center pt-3">
+
+                            {% if booking.user.profile_image %}
+                            <img src="{{booking.user.profile_image.url}}" alt="" width="35px" height="35px" class="me-3"
+                                style="border-radius: 50%;">
+                            {% else %}
+                            <img src="{% static 'media/user_icon.png' %}" alt="" width="35px" height="35px" class="me-3"
+                                style="border-radius: 50%;">
+                            {% endif %}
+
+                            <h5 style="font-size: 19px;">{{booking.user.username}}</h5>
+                        </div>
+                        <div class="pt-3 d-flex align-items-center">
+                            <span class="text-secondary">Pick-Up Date:</span>
+                            <span class="text-secondary ms-auto p_u_d">{{booking.pick_up_date}}</span>
+                        </div>
+                        <div class="d-flex justify-content-between py-3">
+                            <span class="text-muted">Status:</span>
+
+                            {% if booking.completed %}
+                            <div class="px-2" style="background: #00ff155d; border-radius: 10px;"><small
+                                    class="text-success">Completed</small></div>
+                            {% else %}
+                            {% if booking.confirmed %}
+                            <div class="px-2" style="background: #ffbb005d; border-radius: 10px;"><small
+                                    class="text-warning">Active</small></div>
+                            {% else %}
+                            <div class="px-2" style="background: #8686865d; border-radius: 10px;"><small
+                                    class="text-secondary">Inactive</small></div>
+                            {% endif %}
+                            {% endif %}
+
+                        </div>
+                        <div class="d-flex flex-wrap align-items-center">
+                            <span class="text-muted col mb-2">Actions:</span>
+
+                            {% if booking.completed %}
+                            <a href="{% url 'complete_booking' booking.id %}" class="px-2 text-decoration-none"
+                                style="background: #8686865d; border-radius: 10px;"><small
+                                    class="text-secondary">Booking Incomplete</small></a>
+                            {% else %}
+                            {% if booking.confirmed %}
+                            <a href="{% url 'cancel_booking' booking.id %}" class="px-2 me-1 text-decoration-none"
+                                style="background: #ff00005d; border-radius: 10px;"><small class="text-danger">Cancel
+                                    Booking</small></a>
+                            <a href="{% url 'complete_booking' booking.id %}" class="px-2 text-decoration-none"
+                                style="background: #00ff155d; border-radius: 10px;"><small class="text-success">Complete
+                                    Booking</small></a>
+                            {% else %}
+                            <a href="{% url 'confirm_booking' booking.id %}" class="px-2 text-decoration-none"
+                                style="background: #00ff155d; border-radius: 10px;"><small class="text-success">Confirm
+                                    Booking</small></a>
+                            {% endif %}
+                            {% endif %}
+
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+    pick_up_dates = $(".p_u_d")
+
+    for (let i = 0; i < pick_up_dates.length; i++) {
+        date = $(pick_up_dates[i]).text().split(',')[0] + $(pick_up_dates[i]).text().split(',')[1]
+        if (date.includes(new Date().getDate())) {
+            $(pick_up_dates[i].parentElement.parentElement.parentElement).removeClass("d-none").addClass("d-block")
+        }
+    }
+
+    bookings = $(".bookings.d-block")
+
+    if (bookings.length == 0) {
+        $(".no_bookings").removeClass("d-none")
+    }
+</script>
+{% endblock main %}
