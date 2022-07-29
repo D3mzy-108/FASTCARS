@@ -104,11 +104,6 @@
                     <td class="d-flex align-items-center"><span class="me-1">$</span>{{vehicle_form.price}}</td>
                 </tr>
             </table>
-            <p>Please select an image of this car with no background</p>
-            <label for="id_trans_image"
-                {% if vehicle.trans_image %}style="background-image: url('{{vehicle.trans_image.url}}');"
-                {% endif %}> <i class="fas fa-circle-plus fs-5"></i></label>
-            <div class="d-none">{{vehicle_form.trans_image}}</div>
             <button type="submit" class="btn px-4 text-white rounded-0"
                 style="background: var(--orange);">Submit</button>
         </form>
@@ -175,14 +170,6 @@
                     `url(${URL.createObjectURL(e.target.files[0])})`)
             } else {
                 $("label[for='id_image5']").css("background-image", `url('')`)
-            }
-        })
-        $("#id_trans_image").change((e) => {
-            if (e.target.files[0] != null) {
-                $("label[for='id_trans_image']").css("background-image",
-                    `url(${URL.createObjectURL(e.target.files[0])})`)
-            } else {
-                $("label[for='id_trans_image']").css("background-image", `url('')`)
             }
         })
     })

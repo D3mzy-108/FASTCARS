@@ -1,4 +1,5 @@
 import datetime
+from operator import index
 from django.shortcuts import redirect, render
 from admin_panel.forms import AboutUsForm, BranchForm, BrandForm, FaqForm, NewCarForm, VehicleForm
 from main_site.models import FAQ, Booking, CustomerQuery, CustomerReview
@@ -28,7 +29,6 @@ def dashboard(request):
             if booking.pick_up_date.date() == datetime.date.today():
                 booking_count += 1
                 revenue += booking.vehicle.price
-                            
 
         vehicles = models.Vehicle.objects.all()
         total_no_of_vehicles = 0
@@ -37,6 +37,41 @@ def dashboard(request):
 
         queries = CustomerQuery.objects.all()
         pending = queries.filter(resolved=False)
+
+        no_of_days_recorded = 7
+        no_of_days_recorded_in_prev_week = 14
+        revenue_list = []
+        last_week_revenue_list = []
+        bookings_this_week = []
+        bookings_last_week = []
+
+        for day in range(0, no_of_days_recorded, 1):
+            revenue_list.append(0)
+            for booking in bookings:
+                if booking.pick_up_date.date() == datetime.date.today() - datetime.timedelta(days=day):
+                    revenue_list[day] += booking.vehicle.price
+
+        index = 0
+        for day in range(7, no_of_days_recorded_in_prev_week, 1):
+            last_week_revenue_list.append(0)
+            for booking in bookings:
+                if booking.pick_up_date.date() == datetime.date.today() - datetime.timedelta(days=day):
+                    last_week_revenue_list[index] += booking.vehicle.price
+            index += 1
+
+        for day in range(0, no_of_days_recorded, 1):
+            bookings_this_week.append(0)
+            for booking in bookings:
+                if booking.pick_up_date.date() == datetime.date.today() - datetime.timedelta(days=day):
+                    bookings_this_week[day] += 1
+
+        bk_index = 0
+        for day in range(7, no_of_days_recorded_in_prev_week, 1):
+            bookings_last_week.append(0)
+            for booking in bookings:
+                if booking.pick_up_date.date() == datetime.date.today() - datetime.timedelta(days=day):
+                    bookings_last_week[bk_index] += 1
+            bk_index += 1
 
         context = {
             'bookings': bookings,
@@ -48,6 +83,10 @@ def dashboard(request):
             'queries': queries,
             'pending': pending,
             'revenue': revenue,
+            'revenue_list': revenue_list,
+            'last_week_revenue_list': last_week_revenue_list,
+            'bookings_this_week': bookings_this_week,
+            'bookings_last_week': bookings_last_week,
         }
 
         return render(request, 'admin_panel/dashboard.html', context)
@@ -60,6 +99,7 @@ def vehicles(request):
     if request.user.is_staff:
         brands = models.Brand.objects.all().order_by('brand_name')
         vehicles = models.Vehicle.objects.all().order_by('-id')
+
         context = {
             "brands": brands,
             "brandForm": BrandForm(),
@@ -160,9 +200,26 @@ def branches(request):
     if request.user.is_staff:
         branches = models.Branch.objects.all()
 
+        no_of_days_recorded = 7
+        bookings_this_week = []
+        revenues_this_week = []
+
+        index = 0
+        for branch in branches:
+            bookings_this_week.append(0)
+            revenues_this_week.append(0)
+            for day in range(0, no_of_days_recorded, 1):
+                for booking in branch.bookings.all():
+                    if booking.pick_up_date.date() == datetime.date.today() - datetime.timedelta(days=day):
+                        bookings_this_week[index] += 1
+                        revenues_this_week[index] += booking.vehicle.price
+            index += 1
+
         context = {
             'branches': branches,
-            'branchForm': BranchForm()
+            'branchForm': BranchForm(),
+            'bookings_this_week': bookings_this_week,
+            'revenues_this_week': revenues_this_week,
         }
 
         return render(request, 'admin_panel/branches.html', context)

@@ -64,13 +64,11 @@ class VehicleForm(forms.ModelForm):
         attrs={"class": "form-control col bg-transparent"}))
     stock = forms.IntegerField(label="", widget=forms.NumberInput(
         attrs={"class": "form-control col-12 bg-transparent"}))
-    trans_image = forms.FileField(
-        label="Please include an image with no background", widget=forms.FileInput(attrs={"accept": "image/png", "required": False}), required=False)
 
     class Meta:
         model = Vehicle
         fields = ('image1', 'image2', 'image3', 'image4', 'image5', 'brand', 'branch',
-                  'vehicle_model', 'year', 'mileage', 'vin', 'horsepower', 'transmission', 'door', 'drive', 'seat', 'color', 'price', 'stock', 'trans_image')
+                  'vehicle_model', 'year', 'mileage', 'vin', 'horsepower', 'transmission', 'door', 'drive', 'seat', 'color', 'price', 'stock')
 
 
 class NewCarForm(forms.ModelForm):

@@ -29,22 +29,16 @@
                     <th scope="col" class="long_content">Location</th>
                     <th scope="col" class="long_content">Bookings <small>(this week)</small></th>
                     <th scope="col" class="long_content">Revenue <small>(this week)</small></th>
-                    <th scope="col" class="long_content">Pending Queries</th>
-                    <th scope="col" class="long_content" colspan="2">Sales <small><small>(today -
-                                yesterday)</small></small></th>
                 </tr>
 
                 {% for branch in branches %}
-                <tr>
+                <tr class="data_rows">
                     <td><a href="#" class="text-decoration-none text-dark locations">{{branch.branch_location}}</a></td>
                     <td><a href="#" class="text-decoration-none text-dark">{{branch.phone_number}}</a></td>
                     <td><a href="#" class="text-decoration-none text-dark">{{branch.email}}</a></td>
                     <td><a href="#" class="text-decoration-none text-dark">{{branch.address}}</a></td>
-                    <td><a href="#" class="text-decoration-none text-dark"></a></td>
-                    <td><a href="#" class="text-decoration-none text-dark"></a></td>
-                    <td><a href="#" class="text-decoration-none text-dark"></a></td>
-                    <td><a href="#" class="text-decoration-none text-dark"></a></td>
-                    <td style="text-transform: lowercase;"><a href="#" class="text-decoration-none text-dark"></a></td>
+                    <td><a href="#" class="text-decoration-none text-dark text-center">0</a></td>
+                    <td><a href="#" class="text-decoration-none text-dark text-center">$<span>0</span></a></td>
                 </tr>
                 {% endfor %}
             </table>
@@ -137,6 +131,13 @@
 {% endfor %}
 
 
+{% for booking_this_week in bookings_this_week %}
+<p class="booking_this_week d-none">{{booking_this_week}}</p>
+{% endfor %}
+{% for revenue_this_week in revenues_this_week %}
+<p class="revenue_this_week d-none">{{revenue_this_week}}</p>
+{% endfor %}
+
 <style>
     #search_branch {
         border-radius: 0;
@@ -170,11 +171,19 @@
     }
 
     .table_wrapper {
-        overflow-x: hidden;
+        overflow-x: scroll;
     }
 
-    .table_wrapper:hover {
-        overflow-x: scroll;
+    .table_wrapper::-webkit-scrollbar {
+        height: 0;
+    }
+
+    .table_wrapper::-webkit-scrollbar-thumb {
+        background: #777;
+    }
+
+    .table_wrapper:hover::-webkit-scrollbar {
+        height: 5px;
     }
 
     @media screen and (max-width: 992px) {
@@ -201,6 +210,16 @@
                 }
             }
         })
+
+        var bookings_list = $(".booking_this_week")
+        for (let i = 0; i < $(".data_rows").length; i++) {
+            $(`tr.data_rows:nth-child(${i + 2}) td:nth-child(5) a`).text($(bookings_list[i]).text())
+        }
+
+        var revenues_list = $(".revenue_this_week")
+        for (let i = 0; i < $(".data_rows").length; i++) {
+            $(`tr.data_rows:nth-child(${i + 2}) td:nth-child(6) a span`).text($(revenues_list[i]).text())
+        }
     })
 </script>
 {% endblock main %}

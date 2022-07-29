@@ -1,6 +1,7 @@
 from django.shortcuts import redirect, render
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
 from admin_panel.models import AboutUs, Branch, Brand, NewCar, Vehicle
 from main_site.models import FAQ, Booking, CustomerReview
@@ -75,9 +76,11 @@ def car_details(request, slug):
                 comment.user = request.user
                 comment.should_show = False
                 comment.save()
+                messages.success(request, "Thank you for adding your comment.")
                 return redirect('car_details', vehicle.slug)
         else:
-            pass
+            messages.error(request, "Sorry. Only registered users are allowed to add comments.")
+            return redirect('car_details', vehicle.slug)
 
     else:
         vehicle_comment_form = VehicleCommentForm()
