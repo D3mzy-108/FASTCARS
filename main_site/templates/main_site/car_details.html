@@ -227,8 +227,14 @@
                         <form action="{% url 'book_car' vehicle.slug %}" method="post" class="col-12">
                             {% csrf_token %}
                             {{booking_form}}
+                            {% if can_be_booked %}
                             <button type="submit" class="col-12 btn py-2 rounded-0 text-white"
                                 style="background: var(--orange);">BOOK THIS CAR</button>
+                            {% else %}
+                            <button type="button"
+                                onclick="alert('Sorry. All {{vehicle.brand}} {{vehicle.vehicle_model}} we have in stock are booked.')"
+                                class="col-12 btn py-2 rounded-0 bg-light text-secondary">OUT OF STOCK</button>
+                            {% endif %}
                         </form>
                     </div>
                 </div>
@@ -257,7 +263,7 @@
         transition: .1s;
     }
 
-    .hero-banner a:hover{
+    .hero-banner a:hover {
         color: var(--orange);
     }
 

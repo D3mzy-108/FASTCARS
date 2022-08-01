@@ -23,11 +23,14 @@ def dashboard(request):
                 new_users += 1
 
         booking_count = 0
+        active_bookings = 0
         revenue = 0
 
         for booking in bookings:
             if booking.pick_up_date.date() == datetime.date.today():
                 booking_count += 1
+                if booking.confirmed and not booking.completed:
+                    active_bookings += 1
                 revenue += booking.vehicle.price
 
         vehicles = models.Vehicle.objects.all()
@@ -47,39 +50,56 @@ def dashboard(request):
 
         for day in range(0, no_of_days_recorded, 1):
             revenue_list.append(0)
+            bookings_this_week.append(0)
             for booking in bookings:
                 if booking.pick_up_date.date() == datetime.date.today() - datetime.timedelta(days=day):
                     revenue_list[day] += booking.vehicle.price
+                    bookings_this_week[day] += 1
 
         index = 0
         for day in range(7, no_of_days_recorded_in_prev_week, 1):
             last_week_revenue_list.append(0)
-            for booking in bookings:
-                if booking.pick_up_date.date() == datetime.date.today() - datetime.timedelta(days=day):
-                    last_week_revenue_list[index] += booking.vehicle.price
-            index += 1
-
-        for day in range(0, no_of_days_recorded, 1):
-            bookings_this_week.append(0)
-            for booking in bookings:
-                if booking.pick_up_date.date() == datetime.date.today() - datetime.timedelta(days=day):
-                    bookings_this_week[day] += 1
-
-        bk_index = 0
-        for day in range(7, no_of_days_recorded_in_prev_week, 1):
             bookings_last_week.append(0)
             for booking in bookings:
                 if booking.pick_up_date.date() == datetime.date.today() - datetime.timedelta(days=day):
-                    bookings_last_week[bk_index] += 1
-            bk_index += 1
+                    last_week_revenue_list[index] += booking.vehicle.price
+                    bookings_last_week[index] += 1
+            index += 1
+
+        revenue_list_month = []
+        last_month_revenue_list = []
+        bookings_this_month = []
+        bookings_last_month = []
+
+        no_of_days_in_month_recorded = 31
+        no_of_days_recorded_in_prev_month = 62
+
+        for day in range(0, no_of_days_in_month_recorded, 1):
+            revenue_list_month.append(0)
+            bookings_this_month.append(0)
+            for booking in bookings:
+                if booking.pick_up_date.date() == datetime.date.today() - datetime.timedelta(days=day):
+                    revenue_list_month[day] += booking.vehicle.price
+                    bookings_this_month[day] += 1
+
+        index_m = 0
+        for day in range(31, no_of_days_recorded_in_prev_month, 1):
+            last_month_revenue_list.append(0)
+            bookings_last_month.append(0)
+            for booking in bookings:
+                if booking.pick_up_date.date() == datetime.date.today() - datetime.timedelta(days=day):
+                    last_month_revenue_list[index_m] += booking.vehicle.price
+                    bookings_last_month[index_m] += 1
+            index_m += 1
 
         context = {
             'bookings': bookings,
             'users': users,
             'new_users': new_users,
             'booking_count': booking_count,
+            'active_bookings': active_bookings,
             'total_no_of_vehicles': total_no_of_vehicles,
-            'available_vehicles': total_no_of_vehicles - booking_count,
+            'available_vehicles': total_no_of_vehicles - active_bookings,
             'queries': queries,
             'pending': pending,
             'revenue': revenue,
@@ -87,6 +107,10 @@ def dashboard(request):
             'last_week_revenue_list': last_week_revenue_list,
             'bookings_this_week': bookings_this_week,
             'bookings_last_week': bookings_last_week,
+            'revenue_list_month': revenue_list_month,
+            'last_month_revenue_list': last_month_revenue_list,
+            'bookings_this_month': bookings_this_month,
+            'bookings_last_month': bookings_last_month,
         }
 
         return render(request, 'admin_panel/dashboard.html', context)

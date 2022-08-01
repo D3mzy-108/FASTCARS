@@ -1,3 +1,4 @@
+import datetime
 from django.shortcuts import redirect, render
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
@@ -63,6 +64,16 @@ def cars_by_brand(request, slug):
 
 def car_details(request, slug):
     vehicle = Vehicle.objects.get(slug=slug)
+    can_be_booked = True
+
+    active_bookings = 0
+    for booking in vehicle.bookings.all():
+        if booking.pick_up_date.date() == datetime.date.today():
+            if booking.confirmed and not booking.completed:
+                active_bookings += 1
+
+    if active_bookings == vehicle.stock:
+        can_be_booked = False
 
     if request.method == 'POST':
         if request.user.is_authenticated:
@@ -79,7 +90,8 @@ def car_details(request, slug):
                 messages.success(request, "Thank you for adding your comment.")
                 return redirect('car_details', vehicle.slug)
         else:
-            messages.error(request, "Sorry. Only registered users are allowed to add comments.")
+            messages.error(
+                request, "Sorry. Only registered users are allowed to add comments.")
             return redirect('car_details', vehicle.slug)
 
     else:
@@ -90,6 +102,7 @@ def car_details(request, slug):
         'vehicle': vehicle,
         'vehicle_comment_form': vehicle_comment_form,
         'booking_form': booking_form,
+        'can_be_booked': can_be_booked,
     }
 
     return render(request, 'main_site/car_details.html', context)
@@ -113,8 +126,9 @@ def book_car(request, slug):
 
 @login_required
 def booking_history(request):
-    bookings = Booking.objects.all().filter(user=request.user).order_by('-pick_up_date')
-    
+    bookings = Booking.objects.all().filter(
+        user=request.user).order_by('-pick_up_date')
+
     context = {
         'bookings': bookings
     }
@@ -123,7 +137,7 @@ def booking_history(request):
 
 def faqs(request):
     faqs = FAQ.objects.all()
-    
+
     context = {
         'faqs': faqs,
     }

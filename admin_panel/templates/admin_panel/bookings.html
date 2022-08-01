@@ -9,6 +9,9 @@
         {% include "partials/sidenav.html" %}
     </div>
     <div class="main_content">
+        <div class="p-2 py-3">
+            <input type="search" name="search_bookings" id="search_bookings" class="form-control col-12 border-0 shadow-none" placeholder="Search bookings by pick-up date or status">
+        </div>
         <div class="d-flex flex-wrap col-12 p-1">
 
             <!-- BOOKINGS -->
@@ -34,21 +37,21 @@
                     </div>
                     <div class="pt-3 d-flex align-items-center">
                         <span class="text-secondary">Pick-Up Date:</span>
-                        <span class="text-secondary ms-auto">{{booking.pick_up_date}}</span>
+                        <span class="text-secondary ms-auto pick_up_date">{{booking.pick_up_date}}</span>
                     </div>
                     <div class="d-flex justify-content-between py-3">
                         <span class="text-muted">Status:</span>
 
                         {% if booking.completed %}
                         <div class="px-2" style="background: #00ff155d; border-radius: 10px;"><small
-                                class="text-success">Completed</small></div>
+                                class="text-success status">Completed</small></div>
                         {% else %}
                         {% if booking.confirmed %}
                         <div class="px-2" style="background: #ffbb005d; border-radius: 10px;"><small
-                                class="text-warning">Active</small></div>
+                                class="text-warning status">Active</small></div>
                         {% else %}
                         <div class="px-2" style="background: #8686865d; border-radius: 10px;"><small
-                                class="text-secondary">Inactive</small></div>
+                                class="text-secondary status">Inactive</small></div>
                         {% endif %}
                         {% endif %}
 
@@ -84,4 +87,20 @@
     </div>
 </div>
 
+
+<script>
+    $("#search_bookings").keyup((e) => {
+        var pickupdate = $(".pick_up_date")
+        var status = $(".status")
+
+        for(let i = 0; i < pickupdate.length; i++){
+            search_format = `${pickupdate[i].textContent.toLowerCase()} ${status[i].textContent.toLowerCase()}`
+            if(search_format.includes(e.target.value.toLowerCase())){
+                $(pickupdate[i].parentElement.parentElement.parentElement).removeClass("d-none")
+            }else{
+                $(pickupdate[i].parentElement.parentElement.parentElement).addClass("d-none")
+            }
+        }
+    })
+</script>
 {% endblock %}

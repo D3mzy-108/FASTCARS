@@ -147,7 +147,7 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp-mail.outlook.com'
 EMAIL_HOST_USER = "demil.ayinde@outlook.com"
-EMAIL_HOST_PASSWORD = "ufrpoevidrnxehys"
+EMAIL_HOST_PASSWORD = "xzndsqegojgfmhoz"
 
 # host password
-# ufrpoevidrnxehys
+# xzndsqegojgfmhoz
