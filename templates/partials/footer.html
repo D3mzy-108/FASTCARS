@@ -22,15 +22,12 @@
                     <li class="py-2"><a href="{% url 'logout' %}" class="text-decoration-none text-white">Logout</a></li>
                 </ul>
             </div>
-            <div class="px-3 newsletter">
-                <form action="">
-                    <h5 class="text-white mb-3">Register to our Newsletter</h5>
-                    <div class="d-flex">
-                        <input type="email" placeholder="Email Address" class="form-control rounded-0">
-                        <button type="submit" class="btn rounded-0 text-white"
-                            style="background: var(--orange);">Submit</button>
-                    </div>
-                </form>
+            <div class="px-3 newsletter d-flex">
+                <div class="col-12">
+                    <h5 class="text-white mb-3 col-12">Register with us</h5>
+                    <a href="{% url 'register' %}" class="btn rounded-0 text-white"
+                        style="background: var(--orange);">CREATE AN ACCOUNT</a>
+                </div>
             </div>
         </div>
     </div>

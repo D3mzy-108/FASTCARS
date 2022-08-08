@@ -94,6 +94,7 @@ def dashboard(request):
 
         context = {
             'bookings': bookings,
+            'today': datetime.date.today(),
             'users': users,
             'new_users': new_users,
             'booking_count': booking_count,

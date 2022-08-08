@@ -91,12 +91,14 @@
                         <h5>Manage Reviews</h5>
                     </div>
                     {% for review in reviews %}
-                    <div class="col-12">
+                    <div class="col-12 col-md-10 mx-auto py-2">
                         <div class="col-12 d-flex">
                             {% if review.user.profile_image %}
-                            <img src="{{review.user.profile_image.url}}" width="30px" height="30px" alt="">
+                            <img src="{{review.user.profile_image.url}}" width="30px" height="30px" alt=""
+                                style="border-radius: 50%;">
                             {% else %}
-                            <img src="{% static 'images/user_icon.png' %}" width="30px" height="30px" alt="">
+                            <img src="{% static 'images/user_icon.png' %}" width="30px" height="30px" alt=""
+                                style="border-radius: 50%;">
                             {% endif %}
                             <span class="ms-2">{{review.user.username}}</span>
 
@@ -110,13 +112,13 @@
                                 <i class="fas fa-trash"></i> Delete
                             </a>
                         </div>
-                        <div class="col-12">
+                        <div class="ms-auto" style="width: calc(100% - 40px) !important;">
                             <span class="text-muted">
                                 {{review.review}}
                             </span>
                         </div>
+                        <hr>
                     </div>
-                    <hr>
                     {% endfor %}
                 </div>
             </div>

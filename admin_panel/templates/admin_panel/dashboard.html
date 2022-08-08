@@ -317,7 +317,11 @@
 
     for (let i = 0; i < pick_up_dates.length; i++) {
         date = $(pick_up_dates[i]).text().split(',')[0] + $(pick_up_dates[i]).text().split(',')[1]
-        if (date.includes(new Date().getDate())) {
+        month = new Date().getMonth()
+        months = ['Jan.', 'Feb.', 'Mar.', 'April.', 'May.', 'June.', 'July.', 'Aug.', 'Sept.', 'Oct.', 'Nov.', 'Dec.']
+        day = new Date().getDate()
+        year = new Date().getFullYear()
+        if (date.includes(months[month] + " " + day + " " + year)) {
             $(pick_up_dates[i].parentElement.parentElement.parentElement).removeClass("d-none").addClass("d-block")
         }
     }
