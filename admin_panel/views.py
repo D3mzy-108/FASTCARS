@@ -14,10 +14,13 @@ from django.contrib.auth.decorators import login_required
 # Dashboard view
 @login_required
 def dashboard(request):
+    # Verify that the user is staff to prevent unauthorised users from accessing the page.
     if request.user.is_staff:
         bookings = Booking.objects.all()
         users = User.objects.all().filter(is_staff=False)
         new_users = 0
+        
+        # Getting the number of newly registered users
         for user in users:
             if user.date_joined.date() == datetime.date.today():
                 new_users += 1
@@ -26,6 +29,7 @@ def dashboard(request):
         active_bookings = 0
         revenue = 0
 
+        # Getting the total number of bookings and active bookings for today
         for booking in bookings:
             if booking.pick_up_date.date() == datetime.date.today():
                 booking_count += 1
@@ -35,6 +39,8 @@ def dashboard(request):
 
         vehicles = models.Vehicle.objects.all()
         total_no_of_vehicles = 0
+        
+        # Getting the total number of vehicles owned by the company
         for vehicle in vehicles:
             total_no_of_vehicles += vehicle.stock
 
@@ -48,6 +54,7 @@ def dashboard(request):
         bookings_this_week = []
         bookings_last_week = []
 
+        # Getting the total bookings and revenue for each day this week.
         for day in range(0, no_of_days_recorded, 1):
             revenue_list.append(0)
             bookings_this_week.append(0)
@@ -57,6 +64,7 @@ def dashboard(request):
                     bookings_this_week[day] += 1
 
         index = 0
+        # Getting the total bookings and revenue for each day in the previous week.
         for day in range(7, no_of_days_recorded_in_prev_week, 1):
             last_week_revenue_list.append(0)
             bookings_last_week.append(0)
@@ -74,6 +82,7 @@ def dashboard(request):
         no_of_days_in_month_recorded = 31
         no_of_days_recorded_in_prev_month = 62
 
+        # Getting the total bookings and revenue for each day this month.
         for day in range(0, no_of_days_in_month_recorded, 1):
             revenue_list_month.append(0)
             bookings_this_month.append(0)
@@ -83,6 +92,7 @@ def dashboard(request):
                     bookings_this_month[day] += 1
 
         index_m = 0
+        # Getting the total bookings and revenue for each day in the previous month.
         for day in range(31, no_of_days_recorded_in_prev_month, 1):
             last_month_revenue_list.append(0)
             bookings_last_month.append(0)
@@ -119,8 +129,10 @@ def dashboard(request):
         return redirect('home')
 
 
+# Manage Vehicles View
 @login_required
 def vehicles(request):
+    # Verify that the user is staff to prevent unauthorised users from accessing the page.
     if request.user.is_staff:
         brands = models.Brand.objects.all().order_by('brand_name')
         vehicles = models.Vehicle.objects.all().order_by('-id')
@@ -136,8 +148,10 @@ def vehicles(request):
         return redirect('home')
 
 
+# View Vehicle Details
 @login_required
 def vehicle_details(request, slug):
+    # Verify that the user is staff to prevent unauthorised users from accessing the page.
     if request.user.is_staff:
         vehicle = models.Vehicle.objects.get(slug=slug)
 
@@ -149,8 +163,10 @@ def vehicle_details(request, slug):
         return redirect('home')
 
 
+# Filter Vehicles By Brand
 @login_required
 def filter_vehicle(request, slug):
+    # Verify that the user is staff to prevent unauthorised users from accessing the page.
     if request.user.is_staff:
         brands = models.Brand.objects.all().order_by('brand_name')
         vehicles = models.Vehicle.objects.all().filter(
@@ -167,11 +183,17 @@ def filter_vehicle(request, slug):
         return redirect('home')
 
 
+# Add Brand
 @login_required
 def add_brand(request):
+    # Verify that the user is staff to prevent unauthorised users from accessing the page.
     if request.user.is_staff:
+        
+        # Checking if method is a POST method.
         if request.method == "POST":
             addBrandForm = BrandForm(request.POST)
+            
+            # Checking if form is valid
             if addBrandForm.is_valid():
                 addBrandForm.save()
 
@@ -184,13 +206,18 @@ def add_brand(request):
         return redirect('home')
 
 
+# Edit Brand View
 @login_required
 def edit_brand(request, slug):
+    # Verify that the user is staff to prevent unauthorised users from accessing the page.
     if request.user.is_staff:
+        
+        # Checking if method is a POST method
         if request.method == 'POST':
             editBrandForm = BrandForm(
                 request.POST or None, instance=models.Brand.objects.get(slug=slug))
 
+            # Checking if form is vaild
             if editBrandForm.is_valid():
                 editBrandForm.save()
 
@@ -209,8 +236,10 @@ def edit_brand(request, slug):
         return redirect('home')
 
 
+# Delete brand view
 @login_required
 def delete_brand(request, slug):
+    # Verify that the user is staff to prevent unauthorised users from accessing the page.
     if request.user.is_staff:
         brand = models.Brand.objects.get(slug=slug)
         brand.delete()
@@ -220,8 +249,10 @@ def delete_brand(request, slug):
         return redirect('home')
 
 
+# Branches view
 @login_required
 def branches(request):
+    # Verify that the user is staff to prevent unauthorised users from accessing the page.
     if request.user.is_staff:
         branches = models.Branch.objects.all()
 
@@ -230,6 +261,7 @@ def branches(request):
         revenues_this_week = []
 
         index = 0
+        # Getting the total number of bookings and revenue in each branch for the week
         for branch in branches:
             bookings_this_week.append(0)
             revenues_this_week.append(0)
@@ -252,11 +284,17 @@ def branches(request):
         return redirect('home')
 
 
+# Add Branch
 @login_required
 def add_branch(request):
+    # Verify that the user is staff to prevent unauthorised users from accessing the page.
     if request.user.is_staff:
+        
+        # Checking if method is a POST method.
         if request.method == "POST":
             addBranchForm = BranchForm(request.POST)
+            
+            # Checking if form is vaild.
             if addBranchForm.is_valid():
                 addBranchForm.save()
 
@@ -269,13 +307,17 @@ def add_branch(request):
         return redirect('home')
 
 
+# Edit branch
 @login_required
 def edit_branch(request, slug):
+    # Verify that the user is staff to prevent unauthorised users from accessing the page.
     if request.user.is_staff:
+        # Checking if method is a POST method
         if request.method == 'POST':
             editBranchForm = BranchForm(
                 request.POST or None, instance=models.Branch.objects.get(slug=slug))
 
+            # Checking if form is valid
             if editBranchForm.is_valid():
                 editBranchForm.save()
 
@@ -294,8 +336,10 @@ def edit_branch(request, slug):
         return redirect('home')
 
 
+# Delete branch
 @login_required
 def delete_branch(request, slug):
+    # Verify that the user is staff to prevent unauthorised users from accessing the page.
     if request.user.is_staff:
         branch = models.Branch.objects.get(slug=slug)
         branch.delete()
@@ -305,12 +349,16 @@ def delete_branch(request, slug):
         return redirect('home')
 
 
+# Add vehicle
 @login_required
 def add_vehicle(request):
+    # Verify that the user is staff to prevent unauthorised users from accessing the page.
     if request.user.is_staff:
+        # Checking if method is a POST method
         if request.method == 'POST':
             vehicle_form = VehicleForm(request.POST, request.FILES)
 
+            # Checking if form is valid
             if vehicle_form.is_valid():
                 vehicle_form.save()
 
@@ -327,14 +375,18 @@ def add_vehicle(request):
         return redirect('home')
 
 
+# Edit vehicle
 @login_required
 def edit_vehicle(request, slug):
+    # Verify that the user is staff to prevent unauthorised users from accessing the page.
     if request.user.is_staff:
         vehicle = models.Vehicle.objects.get(slug=slug)
+        # Checking if method is a POST method
         if request.method == 'POST':
             vehicle_form = VehicleForm(
                 request.POST or None, request.FILES or None, instance=vehicle)
 
+            # Checking if form is vaild.
             if vehicle_form.is_valid():
                 vehicle_form.save()
 
@@ -353,8 +405,10 @@ def edit_vehicle(request, slug):
         return redirect('home')
 
 
+# Delete vehicle
 @login_required
 def delete_vehicle(request, slug):
+    # Verify that the user is staff to prevent unauthorised users from accessing the page.
     if request.user.is_staff:
         vehicle = models.Vehicle.objects.get(slug=slug)
         vehicle.delete()
@@ -364,8 +418,10 @@ def delete_vehicle(request, slug):
         return redirect('home')
 
 
+# Toggle is_active property of vehicle comment
 @login_required
 def show_comment_in_website(request, id):
+    # Verify that the user is staff to prevent unauthorised users from accessing the page.
     if request.user.is_staff:
         comment = models.VehicleComment.objects.get(id=id)
         comment.should_show = not comment.should_show
@@ -376,8 +432,10 @@ def show_comment_in_website(request, id):
         return redirect('home')
 
 
+# Delete user comment or testimonials
 @login_required
 def delete_comment(request, id):
+    # Verify that the user is staff to prevent unauthorised users from accessing the page.
     if request.user.is_staff:
         comment = models.VehicleComment.objects.get(id=id)
         comment.delete()
@@ -387,8 +445,10 @@ def delete_comment(request, id):
         return redirect('home')
 
 
+# View all registered users that are not staff members
 @login_required
 def registered_users(request):
+    # Verify that the user is staff to prevent unauthorised users from accessing the page.
     if request.user.is_staff:
         users = User.objects.all().filter(is_staff=False).order_by("-last_login")
 
@@ -401,8 +461,10 @@ def registered_users(request):
         return redirect('home')
 
 
+# Delete registered user
 @login_required
 def delete_user(request, id):
+    # Verify that the user is staff to prevent unauthorised users from accessing the page.
     if request.user.is_staff:
         user = User.objects.get(id=id)
         user.delete()
@@ -412,8 +474,10 @@ def delete_user(request, id):
         return redirect('home')
 
 
+# Manage bookings view
 @login_required
 def bookings(request):
+    # Verify that the user is staff to prevent unauthorised users from accessing the page.
     if request.user.is_staff:
         bookings = Booking.objects.all().order_by('-id')
 
@@ -426,8 +490,10 @@ def bookings(request):
         return redirect('home')
 
 
+# Confirm booking
 @login_required
 def confirm_booking(request, id):
+    # Verify that the user is staff to prevent unauthorised users from accessing the page.
     if request.user.is_staff:
         bookings = Booking.objects.get(id=id)
 
@@ -439,8 +505,10 @@ def confirm_booking(request, id):
         return redirect('home')
 
 
+# Cancel booking
 @login_required
 def cancel_booking(request, id):
+    # Verify that the user is staff to prevent unauthorised users from accessing the page.
     if request.user.is_staff:
         bookings = Booking.objects.get(id=id)
 
@@ -452,8 +520,10 @@ def cancel_booking(request, id):
         return redirect('home')
 
 
+# Complete booking
 @login_required
 def complete_booking(request, id):
+    # Verify that the user is staff to prevent unauthorised users from accessing the page.
     if request.user.is_staff:
         bookings = Booking.objects.get(id=id)
 
@@ -465,8 +535,10 @@ def complete_booking(request, id):
         return redirect('home')
 
 
+# Delete booking
 @login_required
 def delete_booking(request, id):
+    # Verify that the user is staff to prevent unauthorised users from accessing the page.
     if request.user.is_staff:
         booking = Booking.objects.get(id=id)
         booking.delete()
@@ -476,8 +548,10 @@ def delete_booking(request, id):
         return redirect('home')
 
 
+# View booking details
 @login_required
 def booking_details(request, id):
+    # Verify that the user is staff to prevent unauthorised users from accessing the page.
     if request.user.is_staff:
         bookings = Booking.objects.all().order_by('-id')
         booking = Booking.objects.get(id=id)
@@ -492,8 +566,10 @@ def booking_details(request, id):
         return redirect('home')
 
 
+# Manage customer queries View
 @login_required
 def manage_queries(request):
+    # Verify that the user is staff to prevent unauthorised users from accessing the page.
     if request.user.is_staff:
         queries = CustomerQuery.objects.all()
         context = {
@@ -505,8 +581,10 @@ def manage_queries(request):
         return redirect('home')
 
 
+# Resolve customer queries
 @login_required
 def resolved_queries(request, id):
+    # Verify that the user is staff to prevent unauthorised users from accessing the page.
     if request.user.is_staff:
         query = CustomerQuery.objects.get(id=id)
         query.resolved = True
@@ -517,8 +595,10 @@ def resolved_queries(request, id):
         return redirect('home')
 
 
+# Manage website content View
 @login_required
 def manage_site(request):
+    # Verify that the user is staff to prevent unauthorised users from accessing the page.
     if request.user.is_staff:
         new_cars = models.NewCar.objects.all()
         vehicles = models.Vehicle.objects.all()
@@ -544,10 +624,14 @@ def manage_site(request):
         return redirect('home')
 
 
+# Add new car
 @login_required
 def add_new_car(request, slug):
+    # Verify that the user is staff to prevent unauthorised users from accessing the page.
     if request.user.is_staff:
         new_car_form = NewCarForm(request.POST)
+        
+        # Checking if form is vaild.
         if new_car_form.is_valid():
             new_car = new_car_form.save(commit=False)
             new_car.vehicle = models.Vehicle.objects.get(slug=slug)
@@ -559,8 +643,10 @@ def add_new_car(request, slug):
         return redirect('home')
 
 
+# Remove new car or Delete new car
 @login_required
 def remove_new_car(request, id):
+    # Verify that the user is staff to prevent unauthorised users from accessing the page.
     if request.user.is_staff:
         new_car = models.NewCar.objects.get(id=id)
         new_car.delete()
@@ -570,12 +656,19 @@ def remove_new_car(request, id):
         return redirect('home')
 
 
+# Add about us
 @login_required
 def add_about_us(request):
+    # Verify that the user is staff to prevent unauthorised users from accessing the page.
     if request.user.is_staff:
+        
+        # Checking if about us already exists in the database.
+        # If it does, It can't add another.
+        # Else, It would create a new about us item to the AboutUs table.
         if models.AboutUs.objects.all().count() == 0 or None:
             addAboutUsForm = AboutUsForm(request.POST)
 
+            # Checking if form is vaild.
             if addAboutUsForm.is_valid():
                 addAboutUsForm.save()
 
@@ -588,12 +681,15 @@ def add_about_us(request):
         return redirect('home')
 
 
+# Edit about us
 @login_required
 def edit_about_us(request, id):
+    # Verify that the user is staff to prevent unauthorised users from accessing the page.
     if request.user.is_staff:
         editAboutUsForm = AboutUsForm(
             request.POST or None, instance=models.AboutUs.objects.get(id=id))
 
+        # Checking if form is vaild.
         if editAboutUsForm.is_valid():
             editAboutUsForm.save()
 
@@ -603,8 +699,10 @@ def edit_about_us(request, id):
         return redirect('home')
 
 
+# Toggle is_active property in the Customer Review model.
 @login_required
 def show_review(request, id):
+    # Verify that the user is staff to prevent unauthorised users from accessing the page.
     if request.user.is_staff:
         review = CustomerReview.objects.get(id=id)
         review.is_active = not review.is_active
@@ -614,8 +712,10 @@ def show_review(request, id):
         return redirect('home')
 
 
+# Delete Customer Review
 @login_required
 def delete_review(request, id):
+    # Verify that the user is staff to prevent unauthorised users from accessing the page.
     if request.user.is_staff:
         review = CustomerReview.objects.get(id=id)
         review.delete()
@@ -625,13 +725,18 @@ def delete_review(request, id):
         return redirect('home')
 
 
+# Add FAQ
 @login_required
 def add_faq(request, id):
+    # Verify that the user is staff to prevent unauthorised users from accessing the page.
     if request.user.is_staff:
         query = CustomerQuery.objects.get(id=id)
+        
+        # Checking if method is a POST method
         if request.method == 'POST':
             faqForm = FaqForm(request.POST)
 
+            # Checking if form is vaild.
             if faqForm.is_valid():
                 faq = faqForm.save(commit=False)
                 faq.query = query
@@ -649,14 +754,19 @@ def add_faq(request, id):
         return redirect('home')
 
 
+# Edit FAQ
 @login_required
 def edit_faq(request, id):
+    # Verify that the user is staff to prevent unauthorised users from accessing the page.
     if request.user.is_staff:
         faq = FAQ.objects.get(id=id)
         query = faq.query
+        
+        # Checking if method is a POST method
         if request.method == 'POST':
             faqForm = FaqForm(request.POST or None, instance=faq)
 
+            # Checking if form is vaild.
             if faqForm.is_valid():
                 faq = faqForm.save(commit=False)
                 faq.query = query
@@ -674,8 +784,10 @@ def edit_faq(request, id):
         return redirect('home')
 
 
+# Delete FAQ
 @login_required
 def delete_faq(request, id):
+    # Verify that the user is staff to prevent unauthorised users from accessing the page.
     if request.user.is_staff:
         faq = FAQ.objects.get(id=id)
         faq.delete()

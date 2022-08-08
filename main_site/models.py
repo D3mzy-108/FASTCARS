@@ -6,6 +6,7 @@ from user.models import User
 # Create your models here.
 
 
+# Booking Model
 class Booking(models.Model):
     user = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="bookings")
@@ -23,6 +24,7 @@ class Booking(models.Model):
         return f"{self.user.username}: {self.vehicle.brand} {self.vehicle.vehicle_model} ~ {self.pick_up_date} - {self.drop_off_date}"
 
 
+# Customer Review Model
 class CustomerReview(models.Model):
     user = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="reviews")
@@ -33,6 +35,7 @@ class CustomerReview(models.Model):
         return f"{self.review} ~ {self.user.username}"
 
 
+# Customer Query Model
 class CustomerQuery(models.Model):
     firstname = models.CharField(max_length=50)
     lastname = models.CharField(max_length=50)
@@ -45,6 +48,7 @@ class CustomerQuery(models.Model):
         return f"{self.message} ~ {self.firstname} {self.lastname} {self.date}"
 
 
+# FAQ Model
 class FAQ(models.Model):
     query = models.ForeignKey(
         CustomerQuery, on_delete=models.CASCADE, related_name='faq')

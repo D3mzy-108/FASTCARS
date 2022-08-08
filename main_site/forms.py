@@ -4,6 +4,7 @@ from admin_panel.models import VehicleComment
 from .models import Booking, CustomerQuery, CustomerReview
 
 
+# Vehicle Comment Form
 class VehicleCommentForm(forms.ModelForm):
     comment = forms.CharField(label="", widget=forms.Textarea(
         attrs={"class": "col-12 form-control", "placeholder": "Type your comment...", "rows": 5}))
@@ -13,6 +14,7 @@ class VehicleCommentForm(forms.ModelForm):
         fields = ('comment',)
 
 
+# Booking Form
 class BookingForm(forms.ModelForm):
     pick_up_location = forms.CharField(label="Pick-Up Location (optional)", widget=forms.TextInput(
         attrs={"class": "form-control rounded-0 bg-light col-12", "placeholder": "(e.g. Oja Oba, Abule-Egba, Lagos.)"}), required=False)
@@ -26,6 +28,7 @@ class BookingForm(forms.ModelForm):
         fields = ('pick_up_location', 'pick_up_date', 'drop_off_date')
 
 
+# Customer Query Form
 class CustomerQueryForm(forms.ModelForm):
     firstname = forms.CharField(label="", widget=forms.TextInput(
         attrs={"class": "form-control shadow-sm border-0 rounded-0 p-3 col-12", "placeholder": "First Name"}))
@@ -41,6 +44,7 @@ class CustomerQueryForm(forms.ModelForm):
         fields = ('firstname', 'lastname', 'email', 'message')
 
 
+# Customer Review Form
 class CustomerReviewForm(forms.ModelForm):
     review = forms.CharField(label="", widget=forms.Textarea(attrs={
                              "class": "form-control shadow-sm border-0 rounded-0 p-3 col-12", "rows": 9, "placeholder": "Type here..."}))

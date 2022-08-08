@@ -4,6 +4,7 @@ from main_site.models import FAQ
 from .models import AboutUs, Branch, Brand, NewCar, Vehicle
 
 
+# Brand Form
 class BrandForm(forms.ModelForm):
     brand_name = forms.CharField(label="", widget=forms.TextInput(
         attrs={"class": "col-12 form-control brand_name_input"}))
@@ -13,6 +14,7 @@ class BrandForm(forms.ModelForm):
         fields = ('brand_name',)
 
 
+# Branch Form
 class BranchForm(forms.ModelForm):
     branch_location = forms.CharField(label="", widget=forms.TextInput(
         attrs={"class": "col-12 form-control brand_name_input"}))
@@ -28,6 +30,7 @@ class BranchForm(forms.ModelForm):
         fields = ('branch_location', 'phone_number', 'email', 'address')
 
 
+# Vehicle Form
 class VehicleForm(forms.ModelForm):
     image1 = forms.FileField(
         label="", widget=forms.FileInput(attrs={"class": "d-none", "accept": "image/jpg, image/png, image/jpeg"}), required=True)
@@ -71,6 +74,7 @@ class VehicleForm(forms.ModelForm):
                   'vehicle_model', 'year', 'mileage', 'vin', 'horsepower', 'transmission', 'door', 'drive', 'seat', 'color', 'price', 'stock')
 
 
+# New Car Form
 class NewCarForm(forms.ModelForm):
     vehicle = forms.MultipleChoiceField(required=False, widget=forms.Select())
 
@@ -79,6 +83,7 @@ class NewCarForm(forms.ModelForm):
         fields = ('vehicle',)
 
 
+# About Us Form
 class AboutUsForm(forms.ModelForm):
     about_text = forms.CharField(
         max_length=300, label="", widget=forms.Textarea(attrs={"maxlength": "300", "class": "form-control col-12", "rows": 3}))
@@ -94,9 +99,11 @@ class AboutUsForm(forms.ModelForm):
         fields = ('about_text', 'service1', 'service2', 'service3')
 
 
+# FAQ Form
 class FaqForm(forms.ModelForm):
-    reply = forms.CharField(label="", widget=forms.Textarea(attrs={"class": "form-control col-12", "rows": 5, "placeholder": "Add a reply or answer to the question asked."}))
-    
+    reply = forms.CharField(label="", widget=forms.Textarea(attrs={
+                            "class": "form-control col-12", "rows": 5, "placeholder": "Add a reply or answer to the question asked."}))
+
     class Meta:
         model = FAQ
         fields = ('reply',)

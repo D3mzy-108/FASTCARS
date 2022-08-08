@@ -3,6 +3,7 @@ from django import forms
 from .models import User
 
 
+# Profile form
 class ProfileForm(forms.ModelForm):
     profile_image = forms.FileField(
         label="", widget=forms.FileInput(attrs={"class": "form-control rounded-0", "accept": "image/png, image/jpg, image/jpeg", "required": False}), required=False)

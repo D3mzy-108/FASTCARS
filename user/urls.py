@@ -2,6 +2,7 @@ from django.urls import path
 from .views import edit_profile, login, logout, register
 from django.contrib.auth import views as auth_views
 
+# URL patterns
 urlpatterns = [
     path("register/", register, name="register"),
     path("login/", login, name="login"),

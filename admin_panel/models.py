@@ -6,6 +6,7 @@ from user.models import User
 # Create your models here.
 
 
+# Brand Model
 class Brand(models.Model):
     brand_name = models.CharField(max_length=100, unique=True)
     slug = models.SlugField(null=True, unique=True, blank=True)
@@ -18,6 +19,7 @@ class Brand(models.Model):
         return super().save(*args, **kwargs)
 
 
+# Branch Model
 class Branch(models.Model):
     branch_location = models.CharField(max_length=200, unique=True)
     phone_number = models.CharField(max_length=20, blank=True)
@@ -33,6 +35,7 @@ class Branch(models.Model):
         return super().save(*args, **kwargs)
 
 
+# Vehicle Model
 class Vehicle(models.Model):
     transmission_choices = [
         ('manual', 'manual'),
@@ -80,6 +83,7 @@ class Vehicle(models.Model):
         return super().save(*args, **kwargs)
 
 
+# Vehicle Comment Model
 class VehicleComment(models.Model):
     rating_choices = [
         ('1', '1'),
@@ -100,6 +104,7 @@ class VehicleComment(models.Model):
         return f"{self.comment} ~ {self.user.username}"
 
 
+# New Car Model
 class NewCar(models.Model):
     vehicle = models.OneToOneField(
         Vehicle, on_delete=models.CASCADE, related_name='new')
@@ -108,6 +113,7 @@ class NewCar(models.Model):
         return f"{self.vehicle.brand.brand_name} {self.vehicle.vehicle_model}"
 
 
+# About Us Model
 class AboutUs(models.Model):
     about_text = models.CharField(max_length=300)
     service1 = models.CharField(max_length=70)

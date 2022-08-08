@@ -11,6 +11,7 @@ from .forms import BookingForm, CustomerQueryForm, CustomerReviewForm, VehicleCo
 # Create your views here.
 
 
+# Home View
 def home(request):
     new_cars = NewCar.objects.all().order_by('-id')
     about_details = AboutUs.objects.all()
@@ -30,6 +31,7 @@ def home(request):
     return render(request, 'main_site/home.html', context)
 
 
+# Fleet View
 def cars(request):
     vehicles = Paginator(Vehicle.objects.all().order_by(
         '-id'), 30).get_page(request.GET.get('page'))
@@ -45,6 +47,7 @@ def cars(request):
     return render(request, 'main_site/cars.html', context)
 
 
+# Filter Fleet By Brand View
 def cars_by_brand(request, slug):
     brand = Brand.objects.get(slug=slug)
     vehicles = Paginator(Vehicle.objects.all().filter(brand=brand).order_by(
@@ -62,24 +65,31 @@ def cars_by_brand(request, slug):
     return render(request, 'main_site/cars.html', context)
 
 
+# Car Details View
 def car_details(request, slug):
     vehicle = Vehicle.objects.get(slug=slug)
     can_be_booked = True
 
     active_bookings = 0
+
+    # Getting the number of active bookings on a particular vehicle
     for booking in vehicle.bookings.all():
         if booking.pick_up_date.date() == datetime.date.today():
             if booking.confirmed and not booking.completed:
                 active_bookings += 1
 
+    # Comparing the number of active bookings with the stock of that vehicle.
     if active_bookings == vehicle.stock:
         can_be_booked = False
 
+    # Checking if method is POST method.
     if request.method == 'POST':
+        # Verifying that the current user is authenticated
         if request.user.is_authenticated:
             vehicle_comment_form = VehicleCommentForm(request.POST)
             rating = request.POST['rating']
 
+            # If vehicle comment form is valid, add a comment with the information provided.
             if vehicle_comment_form.is_valid():
                 comment = vehicle_comment_form.save(commit=False)
                 comment.rating = rating
@@ -108,12 +118,14 @@ def car_details(request, slug):
     return render(request, 'main_site/car_details.html', context)
 
 
+# Book Vehicle
 @login_required
 def book_car(request, slug):
     vehicle = Vehicle.objects.get(slug=slug)
 
     booking_form = BookingForm(request.POST)
 
+    # Checking if booking form is valid.
     if booking_form.is_valid():
         booking = booking_form.save(commit=False)
         booking.user = request.user
@@ -124,6 +136,7 @@ def book_car(request, slug):
         return redirect('booking_history')
 
 
+# Car Booking History
 @login_required
 def booking_history(request):
     bookings = Booking.objects.all().filter(
@@ -135,6 +148,7 @@ def booking_history(request):
     return render(request, 'main_site/booking_history.html', context)
 
 
+# FAQ View
 def faqs(request):
     faqs = FAQ.objects.all()
 
@@ -144,6 +158,7 @@ def faqs(request):
     return render(request, 'main_site/faq.html', context)
 
 
+# Contact Us View
 def contact(request):
     branches = Branch.objects.all()
     customerQueryForm = CustomerQueryForm()
@@ -158,19 +173,23 @@ def contact(request):
     return render(request, 'main_site/contact.html', context)
 
 
+# Add Query View
 def add_query(request):
     customerQueryForm = CustomerQueryForm(request.POST)
 
+    # Checking if customerQueryForm is valid.
     if customerQueryForm.is_valid():
         customerQueryForm.save()
 
         return redirect('contact')
 
 
+# Add Customer Review on Company
 @login_required
 def add_customer_review(request):
     customerReviewForm = CustomerReviewForm(request.POST)
 
+    # Checking to see if customerReviewForm is valid.
     if customerReviewForm.is_valid():
         review = customerReviewForm.save(commit=False)
         review.user = request.user
