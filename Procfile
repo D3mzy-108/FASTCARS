@@ -1,0 +1,1 @@
+web: gunicorn fast_cars.wsgi --log-file -
