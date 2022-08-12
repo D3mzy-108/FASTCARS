@@ -1,1 +1,1 @@
-web: gunicorn fast_cars.wsgi --log-file -
+web: gunicorn fast_cars.wsgi:application --log-file -
