@@ -1,5 +1,6 @@
 import datetime
 from operator import index
+from django.http import Http404
 from django.shortcuts import redirect, render
 from admin_panel.forms import AboutUsForm, BranchForm, BrandForm, FaqForm, NewCarForm, VehicleForm
 from main_site.models import FAQ, Booking, CustomerQuery, CustomerReview
@@ -19,7 +20,7 @@ def dashboard(request):
         bookings = Booking.objects.all()
         users = User.objects.all().filter(is_staff=False)
         new_users = 0
-        
+
         # Getting the number of newly registered users
         for user in users:
             if user.date_joined.date() == datetime.date.today():
@@ -39,7 +40,7 @@ def dashboard(request):
 
         vehicles = models.Vehicle.objects.all()
         total_no_of_vehicles = 0
-        
+
         # Getting the total number of vehicles owned by the company
         for vehicle in vehicles:
             total_no_of_vehicles += vehicle.stock
@@ -169,8 +170,12 @@ def filter_vehicle(request, slug):
     # Verify that the user is staff to prevent unauthorised users from accessing the page.
     if request.user.is_staff:
         brands = models.Brand.objects.all().order_by('brand_name')
+        try:
+            brand = models.Brand.objects.get(slug=slug)
+        except:
+            raise Http404('Page not found')
         vehicles = models.Vehicle.objects.all().filter(
-            brand=models.Brand.objects.get(slug=slug)).order_by('-id')
+            brand=brand).order_by('-id')
 
         context = {
             "brands": brands,
@@ -188,11 +193,11 @@ def filter_vehicle(request, slug):
 def add_brand(request):
     # Verify that the user is staff to prevent unauthorised users from accessing the page.
     if request.user.is_staff:
-        
+
         # Checking if method is a POST method.
         if request.method == "POST":
             addBrandForm = BrandForm(request.POST)
-            
+
             # Checking if form is valid
             if addBrandForm.is_valid():
                 addBrandForm.save()
@@ -211,11 +216,14 @@ def add_brand(request):
 def edit_brand(request, slug):
     # Verify that the user is staff to prevent unauthorised users from accessing the page.
     if request.user.is_staff:
-        
+        try:
+            brand = models.Brand.objects.get(slug=slug)
+        except:
+            raise Http404('Page not found')
         # Checking if method is a POST method
         if request.method == 'POST':
             editBrandForm = BrandForm(
-                request.POST or None, instance=models.Brand.objects.get(slug=slug))
+                request.POST or None, instance=brand)
 
             # Checking if form is vaild
             if editBrandForm.is_valid():
@@ -225,7 +233,7 @@ def edit_brand(request, slug):
 
         else:
             editBrandForm = BrandForm(
-                instance=models.Brand.objects.get(slug=slug))
+                instance=brand)
 
         context = {
             'brandForm': editBrandForm,
@@ -241,7 +249,11 @@ def edit_brand(request, slug):
 def delete_brand(request, slug):
     # Verify that the user is staff to prevent unauthorised users from accessing the page.
     if request.user.is_staff:
-        brand = models.Brand.objects.get(slug=slug)
+        try:
+            brand = models.Brand.objects.get(slug=slug)
+        except:
+            raise Http404('Page not found')
+
         brand.delete()
 
         return redirect(request.META.get('HTTP_REFERER'))
@@ -289,11 +301,11 @@ def branches(request):
 def add_branch(request):
     # Verify that the user is staff to prevent unauthorised users from accessing the page.
     if request.user.is_staff:
-        
+
         # Checking if method is a POST method.
         if request.method == "POST":
             addBranchForm = BranchForm(request.POST)
-            
+
             # Checking if form is vaild.
             if addBranchForm.is_valid():
                 addBranchForm.save()
@@ -313,9 +325,14 @@ def edit_branch(request, slug):
     # Verify that the user is staff to prevent unauthorised users from accessing the page.
     if request.user.is_staff:
         # Checking if method is a POST method
+        try:
+            branch = models.Branch.objects.get(slug=slug)
+        except:
+            raise Http404('Page not found')
+
         if request.method == 'POST':
             editBranchForm = BranchForm(
-                request.POST or None, instance=models.Branch.objects.get(slug=slug))
+                request.POST or None, instance=branch)
 
             # Checking if form is valid
             if editBranchForm.is_valid():
@@ -325,7 +342,7 @@ def edit_branch(request, slug):
 
         else:
             editBranchForm = BranchForm(
-                instance=models.Branch.objects.get(slug=slug))
+                instance=branch)
 
         context = {
             'branchForm': editBranchForm,
@@ -341,7 +358,11 @@ def edit_branch(request, slug):
 def delete_branch(request, slug):
     # Verify that the user is staff to prevent unauthorised users from accessing the page.
     if request.user.is_staff:
-        branch = models.Branch.objects.get(slug=slug)
+        try:
+            branch = models.Branch.objects.get(slug=slug)
+        except:
+            raise Http404('Page not found')
+
         branch.delete()
 
         return redirect(request.META.get('HTTP_REFERER'))
@@ -380,7 +401,10 @@ def add_vehicle(request):
 def edit_vehicle(request, slug):
     # Verify that the user is staff to prevent unauthorised users from accessing the page.
     if request.user.is_staff:
-        vehicle = models.Vehicle.objects.get(slug=slug)
+        try:
+            vehicle = models.Vehicle.objects.get(slug=slug)
+        except:
+            raise Http404('Page not found')
         # Checking if method is a POST method
         if request.method == 'POST':
             vehicle_form = VehicleForm(
@@ -410,7 +434,11 @@ def edit_vehicle(request, slug):
 def delete_vehicle(request, slug):
     # Verify that the user is staff to prevent unauthorised users from accessing the page.
     if request.user.is_staff:
-        vehicle = models.Vehicle.objects.get(slug=slug)
+        try:
+            vehicle = models.Vehicle.objects.get(slug=slug)
+        except:
+            raise Http404('Page not found')
+
         vehicle.delete()
 
         return redirect('vehicles')
@@ -423,7 +451,11 @@ def delete_vehicle(request, slug):
 def show_comment_in_website(request, id):
     # Verify that the user is staff to prevent unauthorised users from accessing the page.
     if request.user.is_staff:
-        comment = models.VehicleComment.objects.get(id=id)
+        try:
+            comment = models.VehicleComment.objects.get(id=id)
+        except:
+            raise Http404('Page not found')
+
         comment.should_show = not comment.should_show
         comment.save()
 
@@ -437,7 +469,11 @@ def show_comment_in_website(request, id):
 def delete_comment(request, id):
     # Verify that the user is staff to prevent unauthorised users from accessing the page.
     if request.user.is_staff:
-        comment = models.VehicleComment.objects.get(id=id)
+        try:
+            comment = models.VehicleComment.objects.get(id=id)
+        except:
+            raise Http404('Page not found')
+
         comment.delete()
 
         return redirect(request.META.get('HTTP_REFERER'))
@@ -466,7 +502,11 @@ def registered_users(request):
 def delete_user(request, id):
     # Verify that the user is staff to prevent unauthorised users from accessing the page.
     if request.user.is_staff:
-        user = User.objects.get(id=id)
+        try:
+            user = User.objects.get(id=id)
+        except:
+            raise Http404('Page not found')
+
         user.delete()
 
         return redirect(request.META.get('HTTP_REFERER'))
@@ -495,7 +535,10 @@ def bookings(request):
 def confirm_booking(request, id):
     # Verify that the user is staff to prevent unauthorised users from accessing the page.
     if request.user.is_staff:
-        bookings = Booking.objects.get(id=id)
+        try:
+            bookings = Booking.objects.get(id=id)
+        except:
+            raise Http404('Page not found')
 
         bookings.confirmed = True
         bookings.save()
@@ -510,7 +553,10 @@ def confirm_booking(request, id):
 def cancel_booking(request, id):
     # Verify that the user is staff to prevent unauthorised users from accessing the page.
     if request.user.is_staff:
-        bookings = Booking.objects.get(id=id)
+        try:
+            bookings = Booking.objects.get(id=id)
+        except:
+            raise Http404('Page not found')
 
         bookings.confirmed = False
         bookings.save()
@@ -525,7 +571,10 @@ def cancel_booking(request, id):
 def complete_booking(request, id):
     # Verify that the user is staff to prevent unauthorised users from accessing the page.
     if request.user.is_staff:
-        bookings = Booking.objects.get(id=id)
+        try:
+            bookings = Booking.objects.get(id=id)
+        except:
+            raise Http404('Page not found')
 
         bookings.completed = not bookings.completed
         bookings.save()
@@ -540,7 +589,11 @@ def complete_booking(request, id):
 def delete_booking(request, id):
     # Verify that the user is staff to prevent unauthorised users from accessing the page.
     if request.user.is_staff:
-        booking = Booking.objects.get(id=id)
+        try:
+            booking = Booking.objects.get(id=id)
+        except:
+            raise Http404('Page not found')
+
         booking.delete()
 
         return redirect('bookings')
@@ -554,7 +607,10 @@ def booking_details(request, id):
     # Verify that the user is staff to prevent unauthorised users from accessing the page.
     if request.user.is_staff:
         bookings = Booking.objects.all().order_by('-id')
-        booking = Booking.objects.get(id=id)
+        try:
+            booking = Booking.objects.get(id=id)
+        except:
+            raise Http404('Page not found')
 
         context = {
             'bookings': bookings,
@@ -586,7 +642,11 @@ def manage_queries(request):
 def resolved_queries(request, id):
     # Verify that the user is staff to prevent unauthorised users from accessing the page.
     if request.user.is_staff:
-        query = CustomerQuery.objects.get(id=id)
+        try:
+            query = CustomerQuery.objects.get(id=id)
+        except:
+            raise Http404('Page not found')
+
         query.resolved = True
         query.save()
 
@@ -630,11 +690,16 @@ def add_new_car(request, slug):
     # Verify that the user is staff to prevent unauthorised users from accessing the page.
     if request.user.is_staff:
         new_car_form = NewCarForm(request.POST)
-        
+
+        try:
+            vehicle = models.Vehicle.objects.get(slug=slug)
+        except:
+            raise Http404('Page not found')
+
         # Checking if form is vaild.
         if new_car_form.is_valid():
             new_car = new_car_form.save(commit=False)
-            new_car.vehicle = models.Vehicle.objects.get(slug=slug)
+            new_car.vehicle = vehicle
             new_car.save()
 
             return redirect('manage_site')
@@ -648,7 +713,11 @@ def add_new_car(request, slug):
 def remove_new_car(request, id):
     # Verify that the user is staff to prevent unauthorised users from accessing the page.
     if request.user.is_staff:
-        new_car = models.NewCar.objects.get(id=id)
+        try:
+            new_car = models.NewCar.objects.get(id=id)
+        except:
+            raise Http404('Page not found')
+
         new_car.delete()
 
         return redirect('manage_site')
@@ -661,7 +730,7 @@ def remove_new_car(request, id):
 def add_about_us(request):
     # Verify that the user is staff to prevent unauthorised users from accessing the page.
     if request.user.is_staff:
-        
+
         # Checking if about us already exists in the database.
         # If it does, It can't add another.
         # Else, It would create a new about us item to the AboutUs table.
@@ -686,8 +755,13 @@ def add_about_us(request):
 def edit_about_us(request, id):
     # Verify that the user is staff to prevent unauthorised users from accessing the page.
     if request.user.is_staff:
+        try:
+            aboutus = models.AboutUs.objects.get(id=id)
+        except:
+            raise Http404('Page not found')
+        
         editAboutUsForm = AboutUsForm(
-            request.POST or None, instance=models.AboutUs.objects.get(id=id))
+            request.POST or None, instance=aboutus)
 
         # Checking if form is vaild.
         if editAboutUsForm.is_valid():
@@ -704,7 +778,11 @@ def edit_about_us(request, id):
 def show_review(request, id):
     # Verify that the user is staff to prevent unauthorised users from accessing the page.
     if request.user.is_staff:
-        review = CustomerReview.objects.get(id=id)
+        try:
+            review = CustomerReview.objects.get(id=id)
+        except:
+            raise Http404('Page not found')
+
         review.is_active = not review.is_active
         review.save()
         return redirect('manage_site')
@@ -717,7 +795,11 @@ def show_review(request, id):
 def delete_review(request, id):
     # Verify that the user is staff to prevent unauthorised users from accessing the page.
     if request.user.is_staff:
-        review = CustomerReview.objects.get(id=id)
+        try:
+            review = CustomerReview.objects.get(id=id)
+        except:
+            raise Http404('Page not found')
+
         review.delete()
 
         return redirect('manage_site')
@@ -730,8 +812,11 @@ def delete_review(request, id):
 def add_faq(request, id):
     # Verify that the user is staff to prevent unauthorised users from accessing the page.
     if request.user.is_staff:
-        query = CustomerQuery.objects.get(id=id)
-        
+        try:
+            query = CustomerQuery.objects.get(id=id)
+        except:
+            raise Http404('Page not found')
+
         # Checking if method is a POST method
         if request.method == 'POST':
             faqForm = FaqForm(request.POST)
@@ -759,9 +844,13 @@ def add_faq(request, id):
 def edit_faq(request, id):
     # Verify that the user is staff to prevent unauthorised users from accessing the page.
     if request.user.is_staff:
-        faq = FAQ.objects.get(id=id)
-        query = faq.query
+        try:
+            faq = FAQ.objects.get(id=id)
+        except:
+            raise Http404('Page not found')
         
+        query = faq.query
+
         # Checking if method is a POST method
         if request.method == 'POST':
             faqForm = FaqForm(request.POST or None, instance=faq)
@@ -789,7 +878,11 @@ def edit_faq(request, id):
 def delete_faq(request, id):
     # Verify that the user is staff to prevent unauthorised users from accessing the page.
     if request.user.is_staff:
-        faq = FAQ.objects.get(id=id)
+        try:
+            faq = FAQ.objects.get(id=id)
+        except:
+            raise Http404('Page not found')
+        
         faq.delete()
 
         return redirect('manage_site')

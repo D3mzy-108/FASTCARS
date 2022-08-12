@@ -1,3 +1,4 @@
+from django.http import Http404
 from django.shortcuts import redirect, render
 from django.contrib import auth
 from django.contrib.auth import authenticate
@@ -85,7 +86,10 @@ def login(request):
 # Edit Profile
 @login_required
 def edit_profile(request):
-    user = User.objects.get(id=request.user.id)
+    try:
+        user = User.objects.get(id=request.user.id)
+    except:
+        raise Http404('User does not exist')
 
     # Check if the method is a POST method.
     if request.method == 'POST':

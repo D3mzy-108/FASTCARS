@@ -9,7 +9,7 @@ urlpatterns = [
     path('', home, name="home"),
     # Fleet Related URLS
     path('cars/', cars, name="cars"),
-    path('cars/<slug:slug>', cars_by_brand, name="cars_by_brand"),
+    path('cars/<slug:slug>/', cars_by_brand, name="cars_by_brand"),
     path('car_details/<slug:slug>/', car_details, name="car_details"),
     path('book_car/<slug:slug>/', book_car, name="book_car"),
     path('booking_history/', booking_history, name="booking_history"),

@@ -1,5 +1,6 @@
 import datetime
-from django.shortcuts import redirect, render
+from django.http import Http404
+from django.shortcuts import get_object_or_404, redirect, render
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -49,7 +50,11 @@ def cars(request):
 
 # Filter Fleet By Brand View
 def cars_by_brand(request, slug):
-    brand = Brand.objects.get(slug=slug)
+    try:
+        brand = Brand.objects.get(slug=slug)
+    except:
+        raise Http404('Page not found')
+
     vehicles = Paginator(Vehicle.objects.all().filter(brand=brand).order_by(
         '-id'), 30).get_page(request.GET.get('page'))
     pages = 'a' * vehicles.paginator.num_pages
@@ -67,7 +72,11 @@ def cars_by_brand(request, slug):
 
 # Car Details View
 def car_details(request, slug):
-    vehicle = Vehicle.objects.get(slug=slug)
+    try:
+        vehicle = Vehicle.objects.get(slug=slug)
+    except:
+        raise Http404('Page not found')
+
     can_be_booked = True
 
     active_bookings = 0
@@ -121,7 +130,10 @@ def car_details(request, slug):
 # Book Vehicle
 @login_required
 def book_car(request, slug):
-    vehicle = Vehicle.objects.get(slug=slug)
+    try:
+        vehicle = Vehicle.objects.get(slug=slug)
+    except:
+        raise Http404('Page not found')
 
     booking_form = BookingForm(request.POST)
 
